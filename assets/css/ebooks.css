@@ -1,0 +1,135 @@
+/**
+ * 电子书列表样式
+ * 
+ * @package     block-canvas Child
+ * @author      JoshuaWang2019
+ * @version     1.0.0
+ * @since       2025-05-04
+ */
+
+/* 电子书网格容器 */
+.ebooks-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* 搜索框样式 */
+.ebooks-search {
+  margin: 2rem auto;
+  display: flex;
+  gap: 1rem;
+  max-width: 600px;
+}
+
+.ebooks-search input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--wp--preset--color--contrast-2, #e0e0e0);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.ebooks-search button {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--wp--preset--color--primary, #0073aa);
+  color: var(--wp--preset--color--base, #ffffff);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ebooks-search button:hover {
+  background-color: var(--wp--preset--color--contrast, #006291);
+}
+
+/* 电子书网格 */
+.ebooks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* 电子书卡片 */
+.ebook-item {
+  border: 1px solid var(--wp--preset--color--contrast-2, #e0e0e0);
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  background: var(--wp--preset--color--base, #ffffff);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ebook-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 封面图片 */
+.ebook-cover {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 标题和作者 */
+.ebook-title {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+  color: var(--wp--preset--color--contrast, #000000);
+}
+
+.ebook-author {
+  font-size: 0.9rem;
+  color: var(--wp--preset--color--contrast, #000000);
+  opacity: 0.8;
+  margin-bottom: 1rem;
+}
+
+/* 下载按钮 */
+.ebook-download {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: var(--wp--preset--color--primary, #0073aa);
+  color: var(--wp--preset--color--base, #ffffff);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.ebook-download:hover {
+  background-color: var(--wp--preset--color--contrast, #006291);
+  color: var(--wp--preset--color--base, #ffffff);
+}
+
+/* 加载状态 */
+.ebooks-grid.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* 无结果提示 */
+.no-books {
+  text-align: center;
+  padding: 2rem;
+  color: var(--wp--preset--color--contrast, #000000);
+  opacity: 0.7;
+  font-style: italic;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+  .ebooks-search {
+    flex-direction: column;
+  }
+
+  .ebooks-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+}

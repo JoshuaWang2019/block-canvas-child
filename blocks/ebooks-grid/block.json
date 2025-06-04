@@ -1,0 +1,19 @@
+{
+    "apiVersion": 2,
+    "name": "block-canvas-child/ebooks-grid",
+    "title": "EBooks Grid",
+    "category": "widgets",
+    "icon": "book-alt",
+    "description": "Display a grid of ebooks with search functionality",
+    "version": "1.0.0",
+    "supports": {
+        "html": false,
+        "align": ["wide", "full"]
+    },
+    "textdomain": "block-canvas-child",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./editor.css",
+    "style": "file:./style.css",
+    "render": "file:./render.php",
+    "viewScript": "file:./view.js"
+}
