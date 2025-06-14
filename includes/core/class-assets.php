@@ -79,6 +79,17 @@ class Assets
             $theme->get('Version'),
             'all'
         );
+
+        // 加载 Message 页面样式
+        if (is_singular('message')) {
+            wp_enqueue_style(
+                'message-style',
+                get_stylesheet_directory_uri() . '/assets/css/message.css',
+                array('block-canvas-child-style'),
+                $theme->get('Version'),
+                'all'
+            );
+        }
     }
 
     /**

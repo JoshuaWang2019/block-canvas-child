@@ -60,6 +60,8 @@ class Blocks
         require_once get_stylesheet_directory() . '/includes/blocks/class-ebooks-grid.php';
         new \BlockCanvasChild\Blocks\Ebooks_Grid();
 
-        // 在这里加载其他区块...
+        // 注册 Message 内容区块
+        require_once get_stylesheet_directory() . '/includes/blocks/class-message-content.php';
+        new \BlockCanvasChild\Blocks\Message_Content();
     }
 }
