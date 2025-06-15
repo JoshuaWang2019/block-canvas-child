@@ -71,14 +71,25 @@ class Assets
             $theme->get('Version')
         );
 
+        // 获取当前模板信息
+        $current_template = get_page_template_slug();
+
         // 加载电子书列表样式
-        wp_enqueue_style(
-            'ebooks-style',
-            get_stylesheet_directory_uri() . '/assets/css/ebooks.css',
-            array('block-canvas-child-style'),
-            $theme->get('Version'),
-            'all'
+        $is_ebooks_page = (
+            $current_template === 'ebooks-list' ||
+            $current_template === 'templates/ebooks-list' ||
+            is_page('ebooks') ||
+            is_page('ebook-list')
         );
+        if ($is_ebooks_page) {
+            wp_enqueue_style(
+                'ebooks-style',
+                get_stylesheet_directory_uri() . '/assets/css/ebooks.css',
+                array('block-canvas-child-style'),
+                $theme->get('Version'),
+                'all'
+            );
+        }
 
         // 加载 Message 页面样式
         if (is_singular('message')) {
@@ -92,7 +103,14 @@ class Assets
         }
 
         // 加载 Messages List 页面样式
-        if (is_page_template('templates/messages-list.html')) {
+        $is_messages_page = (
+            $current_template === 'messages-list' ||
+            $current_template === 'templates/messages-list' ||
+            is_page('messages-list') ||
+            is_page('messages')
+        );
+
+        if ($is_messages_page) {
             wp_enqueue_style(
                 'messages-style',
                 get_stylesheet_directory_uri() . '/assets/css/messages-list.css',
@@ -100,12 +118,6 @@ class Assets
                 $theme->get('Version')
             );
         }
-        // wp_enqueue_style(
-        //     'messages-style',
-        //     get_stylesheet_directory_uri() . '/assets/css/messages-list.css',
-        //     array('block-canvas-child-style'),
-        //     $theme->get('Version')
-        // );
     }
 
     /**
@@ -115,13 +127,23 @@ class Assets
     {
         $theme = wp_get_theme();
 
-        // 电子书搜索脚本 - 修改这里，移除条件判断，确保脚本总是加载
-        wp_enqueue_script(
-            'ebooks-search',
-            get_stylesheet_directory_uri() . '/assets/js/ebooks-search.js',
-            array(),  // 不需要 jQuery 依赖
-            $theme->get('Version'),
-            true  // 在页面底部加载
+        // 获取当前模板信息
+        $current_template = get_page_template_slug();
+        $is_ebooks_page = (
+            $current_template === 'ebooks-list' ||
+            $current_template === 'templates/ebooks-list' ||
+            is_page('ebooks') ||
+            is_page('ebook-list')
         );
+        if ($is_ebooks_page) {
+            // 电子书搜索脚本
+            wp_enqueue_script(
+                'ebooks-search',
+                get_stylesheet_directory_uri() . '/assets/js/ebooks-search.js',
+                array(),  // 不需要 jQuery 依赖
+                $theme->get('Version'),
+                true  // 在页面底部加载
+            );
+        }
     }
 }

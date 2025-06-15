@@ -19,14 +19,14 @@ block-canvas-child/
 │   ├── blocks/            # 自定义区块类
 │   │   └── class-ebooks-grid.php  # 电子书网格区块
 │   │   ├── class-message-content.php
-│   │   └── class-messages-list.php
+│   │   └── class-messages-grid.php
 │   ├── core/             # 核心功能类
 │   │   └── class-assets.php       # 资源管理类
 │   └── init.php          # 初始化文件
 ├── templates/            # 页面模板
 │   └── ebooks-list.html  # 电子书列表页面模板
     ├── single-message.html
-    └── page-messages_list.html
+    └── messages_list.html
 ├── functions.php        # 主题函数文件
 ├── style.css           # 主题样式文件
 └── README.md           # 本文档

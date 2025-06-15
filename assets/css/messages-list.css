@@ -4,14 +4,139 @@
   padding: 2rem 0 !important;
 }
 
+/* 分类头部区域 */
+.category-header {
+  margin-bottom: 2rem !important;
+  text-align: center !important;
+}
+
 /* 分类标题 */
 .category-title {
   color: #333 !important;
-  margin-bottom: 2rem !important;
+  margin: 0 0 1rem 0 !important;
   padding-bottom: 0.5rem !important;
   border-bottom: 2px solid #e0e0e0 !important;
+  font-size: 2rem !important;
+  font-weight: 600 !important;
+  display: inline-block !important;
+  min-width: 200px !important;
+}
+
+/* 信息数量显示 */
+.messages-count {
+  color: #666 !important;
+  font-size: 1rem !important;
+  margin-top: 0.5rem !important;
+  font-weight: 400 !important;
+}
+
+.count-number {
+  color: #0073aa !important;
+  font-weight: 600 !important;
+  font-size: 1.1em !important;
+}
+
+/* 错误提示页面样式 */
+.category-redirect-notice,
+.category-not-found {
+  max-width: 600px !important;
+  margin: 3rem auto !important;
+  padding: 2rem !important;
+  background: #fff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+  text-align: center !important;
+  border: 1px solid #e0e0e0 !important;
+}
+
+.notice-icon {
+  font-size: 3rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.notice-title {
+  color: #333 !important;
   font-size: 1.5rem !important;
   font-weight: 600 !important;
+  margin: 0 0 1rem 0 !important;
+}
+
+.notice-message {
+  color: #666 !important;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  margin-bottom: 2rem !important;
+}
+
+.category-list {
+  margin: 2rem 0 !important;
+  text-align: left !important;
+}
+
+.category-list h3 {
+  color: #333 !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  margin: 0 0 1rem 0 !important;
+  text-align: center !important;
+}
+
+.category-links {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+  gap: 0.5rem !important;
+}
+
+.category-links li {
+  margin: 0 !important;
+}
+
+.category-link {
+  display: block !important;
+  padding: 0.75rem 1rem !important;
+  background: #f8f9fa !important;
+  color: #0073aa !important;
+  text-decoration: none !important;
+  border-radius: 6px !important;
+  border: 1px solid #e0e0e0 !important;
+  transition: all 0.3s ease !important;
+  font-weight: 500 !important;
+  text-align: center !important;
+}
+
+.category-link:hover {
+  background: #0073aa !important;
+  color: white !important;
+  text-decoration: none !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 2px 8px rgba(0, 115, 170, 0.3) !important;
+}
+
+.back-to-home {
+  margin-top: 2rem !important;
+  padding-top: 1.5rem !important;
+  border-top: 1px solid #e0e0e0 !important;
+}
+
+.back-link {
+  display: inline-block !important;
+  padding: 0.75rem 1.5rem !important;
+  background: #6c757d !important;
+  color: white !important;
+  text-decoration: none !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
+.back-link:hover {
+  background: #5a6268 !important;
+  color: white !important;
+  text-decoration: none !important;
+  transform: translateY(-2px) !important;
 }
 
 /* 信息网格布局 */
@@ -34,6 +159,18 @@
 .message-item:hover {
   transform: translateY(-5px) !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 信息链接 */
+.message-link {
+  display: block !important;
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.message-link:hover {
+  color: inherit !important;
+  text-decoration: none !important;
 }
 
 /* 信息卡片 */
@@ -91,15 +228,6 @@
   font-size: 0.9rem !important;
   margin: 0 0 0.5rem 0 !important;
   font-style: italic !important;
-}
-
-/* 信息序号 */
-.message-order {
-  color: #999 !important;
-  font-size: 0.8rem !important;
-  margin-top: auto !important;
-  padding-top: 1rem !important;
-  border-top: 1px solid #f0f0f0 !important;
 }
 
 /* 无信息提示 */
@@ -160,11 +288,50 @@
   font-weight: 600 !important;
 }
 
-/* 响应式设计 */
+/* 响应式设计 - 平板设备 */
+@media (max-width: 1024px) {
+  .messages-container {
+    padding: 1.5rem 1rem !important;
+  }
+
+  .messages-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    gap: 1.5rem !important;
+  }
+
+  .category-title {
+    font-size: 1.75rem !important;
+  }
+
+  .category-redirect-notice,
+  .category-not-found {
+    margin: 2rem 1rem !important;
+  }
+}
+
+/* 响应式设计 - 手机设备 */
 @media (max-width: 768px) {
+  .messages-container {
+    padding: 1rem !important;
+  }
+
+  .category-header {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .category-title {
+    font-size: 1.5rem !important;
+    min-width: auto !important;
+  }
+
+  .messages-count {
+    font-size: 0.9rem !important;
+  }
+
   .messages-grid {
     grid-template-columns: 1fr !important;
     gap: 1.5rem !important;
+    margin: 0 1rem !important;
   }
 
   .message-image-wrapper {
@@ -183,9 +350,58 @@
     padding: 0.5rem 0.75rem !important;
     font-size: 0.9rem !important;
   }
+
+  .messages-pagination {
+    margin: 2rem 1rem 0 1rem !important;
+  }
+
+  /* 错误页面手机端优化 */
+  .category-redirect-notice,
+  .category-not-found {
+    margin: 1rem 0.5rem !important;
+    padding: 1.5rem !important;
+  }
+
+  .notice-title {
+    font-size: 1.25rem !important;
+  }
+
+  .category-links {
+    grid-template-columns: 1fr !important;
+  }
 }
 
+/* 响应式设计 - 小屏手机 */
 @media (max-width: 480px) {
+  .messages-container {
+    padding: 0.5rem !important;
+  }
+
+  .category-title {
+    font-size: 1.25rem !important;
+  }
+
+  .messages-count {
+    font-size: 0.85rem !important;
+  }
+
+  .messages-grid {
+    margin: 0 0.5rem !important;
+    gap: 1rem !important;
+  }
+
+  .message-content {
+    padding: 0.75rem !important;
+  }
+
+  .message-title {
+    font-size: 1rem !important;
+  }
+
+  .message-author {
+    font-size: 0.85rem !important;
+  }
+
   .pagination-list {
     flex-wrap: wrap !important;
     justify-content: center !important;
@@ -196,5 +412,46 @@
     flex-basis: 100% !important;
     text-align: center !important;
     margin-bottom: 0.5rem !important;
+  }
+
+  .messages-pagination {
+    margin: 1.5rem 0.5rem 0 0.5rem !important;
+  }
+
+  .category-redirect-notice,
+  .category-not-found {
+    margin: 0.5rem 0.25rem !important;
+    padding: 1rem !important;
+  }
+
+  .notice-icon {
+    font-size: 2rem !important;
+  }
+
+  .notice-title {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* 超小屏设备优化 */
+@media (max-width: 360px) {
+  .category-title {
+    font-size: 1.1rem !important;
+  }
+
+  .messages-count {
+    font-size: 0.8rem !important;
+  }
+
+  .messages-grid {
+    margin: 0 0.25rem !important;
+  }
+
+  .message-content {
+    padding: 0.5rem !important;
+  }
+
+  .category-header {
+    margin: 0 0.5rem 1.5rem 0.5rem !important;
   }
 }

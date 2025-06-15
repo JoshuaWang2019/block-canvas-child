@@ -25,6 +25,50 @@ class Messages_Grid
     public function __construct()
     {
         $this->register();
+        // 添加钩子来处理 404 情况
+        add_action('template_redirect', array($this, 'handle_invalid_category'));
+    }
+
+    /**
+     * 处理无效分类的情况
+     */
+    public function handle_invalid_category()
+    {
+        // 只在 messages 页面处理
+        if (!$this->is_messages_page()) {
+            return;
+        }
+
+        $url_params = $this->parse_url_params();
+        $category_slug = $url_params['category_slug'];
+
+        // 如果没有分类 slug，重定向到主页或分类列表页
+        if (!$category_slug) {
+            wp_redirect(home_url('/'));
+            exit;
+        }
+
+        // 检查分类是否存在
+        $term = get_term_by('slug', $category_slug, 'message_taxonomy');
+        if (!$term || is_wp_error($term)) {
+            // 设置 404 状态
+            global $wp_query;
+            $wp_query->set_404();
+            status_header(404);
+            return;
+        }
+    }
+
+    /**
+     * 检查是否是 messages 页面
+     */
+    private function is_messages_page()
+    {
+        $request_uri = $_SERVER['REQUEST_URI'];
+        $parsed_url = parse_url($request_uri);
+        $path = trim($parsed_url['path'], '/');
+
+        return preg_match('#^messages(/|$)#', $path);
     }
 
     /**
@@ -63,6 +107,32 @@ class Messages_Grid
     }
 
     /**
+     * 获取分类下的信息总数
+     *
+     * @param int $term_id 分类术语ID
+     * @return int 信息总数
+     */
+    private function get_messages_count($term_id)
+    {
+        $count_args = array(
+            'post_type' => 'message',
+            'post_status' => 'publish',
+            'posts_per_page' => -1,
+            'tax_query' => array(
+                array(
+                    'taxonomy' => 'message_taxonomy',
+                    'field'    => 'term_id',
+                    'terms'    => $term_id,
+                ),
+            ),
+            'fields' => 'ids'
+        );
+
+        $count_query = new \WP_Query($count_args);
+        return $count_query->found_posts;
+    }
+
+    /**
      * 渲染区块
      *
      * @param array $attributes 区块属性
@@ -70,6 +140,11 @@ class Messages_Grid
      */
     public function render($attributes)
     {
+        // 如果是 404 页面，不渲染内容
+        if (is_404()) {
+            return '';
+        }
+
         ob_start();
 
         $url_params = $this->parse_url_params();
@@ -77,20 +152,30 @@ class Messages_Grid
         $paged = $url_params['page'];
 
         if (!$category_slug) {
-            echo '<p class="no-messages">未指定信息分类</p>';
+            // 显示分类列表或重定向提示
+            $this->render_category_redirect();
             return ob_get_clean();
         }
 
         // 获取分类信息
         $term = get_term_by('slug', $category_slug, 'message_taxonomy');
-        if (!$term) {
-            echo '<p class="no-messages">分类不存在: ' . esc_html($category_slug) . '</p>';
+        if (!$term || is_wp_error($term)) {
+            // 显示分类不存在的友好提示
+            $this->render_category_not_found($category_slug);
             return ob_get_clean();
         }
 
+        // 获取该分类下的信息总数
+        $total_messages = $this->get_messages_count($term->term_id);
+
         // 更新页面标题
-        echo '<script>document.title = "' . esc_js($term->name) . ' - 信息列表";</script>';
-        echo '<h2 class="category-title">' . esc_html($term->name) . '</h2>';
+        echo '<script>document.title = "' . esc_js($term->name) . ' - 甘泉网站";</script>';
+
+        // 显示分类名称和信息总数
+        echo '<div class="category-header">';
+        echo '<h1 class="category-title">' . esc_html($term->name) . '</h1>';
+        echo '<div class="messages-count">共 <span class="count-number">' . $total_messages . '</span> 篇信息</div>';
+        echo '</div>';
 
         $query = $this->get_messages_query($term->term_id, $paged);
 
@@ -114,32 +199,100 @@ class Messages_Grid
     }
 
     /**
+     * 渲染分类重定向提示
+     */
+    private function render_category_redirect()
+    {
+        echo '<div class="category-redirect-notice">';
+        echo '<div class="notice-icon">ℹ️</div>';
+        echo '<h2 class="notice-title">请选择信息分类</h2>';
+        echo '<p class="notice-message">您访问的链接缺少分类信息，请选择您要查看的信息分类。</p>';
+
+        // 获取所有可用的分类
+        $terms = get_terms(array(
+            'taxonomy' => 'message_taxonomy',
+            'hide_empty' => true,
+        ));
+
+        if (!empty($terms) && !is_wp_error($terms)) {
+            echo '<div class="category-list">';
+            echo '<h3>可用分类：</h3>';
+            echo '<ul class="category-links">';
+            foreach ($terms as $term) {
+                $term_url = home_url('/messages/' . $term->slug . '/');
+                echo '<li><a href="' . esc_url($term_url) . '" class="category-link">' . esc_html($term->name) . '</a></li>';
+            }
+            echo '</ul>';
+            echo '</div>';
+        }
+
+        echo '<div class="back-to-home">';
+        echo '<a href="' . esc_url(home_url('/')) . '" class="back-link">← 返回首页</a>';
+        echo '</div>';
+        echo '</div>';
+    }
+
+    /**
+     * 渲染分类不存在的提示
+     */
+    private function render_category_not_found($category_slug)
+    {
+        echo '<div class="category-not-found">';
+        echo '<div class="notice-icon">❌</div>';
+        echo '<h2 class="notice-title">分类不存在</h2>';
+        echo '<p class="notice-message">抱歉，分类 "<strong>' . esc_html($category_slug) . '</strong>" 不存在或已被删除。</p>';
+
+        // 获取所有可用的分类
+        $terms = get_terms(array(
+            'taxonomy' => 'message_taxonomy',
+            'hide_empty' => true,
+        ));
+
+        if (!empty($terms) && !is_wp_error($terms)) {
+            echo '<div class="category-list">';
+            echo '<h3>您可以查看以下分类：</h3>';
+            echo '<ul class="category-links">';
+            foreach ($terms as $term) {
+                $term_url = home_url('/messages/' . $term->slug . '/');
+                echo '<li><a href="' . esc_url($term_url) . '" class="category-link">' . esc_html($term->name) . '</a></li>';
+            }
+            echo '</ul>';
+            echo '</div>';
+        }
+
+        echo '<div class="back-to-home">';
+        echo '<a href="' . esc_url(home_url('/')) . '" class="back-link">← 返回首页</a>';
+        echo '</div>';
+        echo '</div>';
+    }
+
+    /**
      * 获取信息查询
      *
-     * @param int $term_id 分类ID
+     * @param int $term_id 分类术语ID
      * @param int $paged 页码
-     * @return \WP_Query
+     * @return \WP_Query 查询对象
      */
     private function get_messages_query($term_id, $paged)
     {
-        $meta_query = array(
-            array(
-                'key' => 'message_category',
-                'value' => $term_id,
-                'compare' => 'LIKE'
-            )
-        );
-
-        return new \WP_Query(array(
+        $args = array(
             'post_type' => 'message',
-            'posts_per_page' => 20,
-            'paged' => $paged,
             'post_status' => 'publish',
-            'meta_query' => $meta_query,
+            'posts_per_page' => 12,
+            'paged' => $paged,
+            'tax_query' => array(
+                array(
+                    'taxonomy' => 'message_taxonomy',
+                    'field'    => 'term_id',
+                    'terms'    => $term_id,
+                ),
+            ),
             'meta_key' => 'message_order',
             'orderby' => 'meta_value_num',
             'order' => 'ASC'
-        ));
+        );
+
+        return new \WP_Query($args);
     }
 
     /**
@@ -150,7 +303,6 @@ class Messages_Grid
         $title = get_field('message_title');
         $author = get_field('message_author');
         $feature_image = get_field('message_feature_image');
-        $order = get_field('message_order');
 
         // 如果没有自定义标题，使用文章标题
         $display_title = !empty($title) ? $title : get_the_title();
@@ -162,26 +314,24 @@ class Messages_Grid
 
 ?>
         <div class="message-item">
-            <div class="message-card">
-                <div class="message-image-wrapper">
-                    <img src="<?php echo esc_url($image_url); ?>"
-                        alt="<?php echo esc_attr($image_alt); ?>"
-                        class="message-feature-image"
-                        loading="lazy">
+            <a href="<?php echo esc_url(get_permalink()); ?>" class="message-link">
+                <div class="message-card">
+                    <div class="message-image-wrapper">
+                        <img src="<?php echo esc_url($image_url); ?>"
+                            alt="<?php echo esc_attr($image_alt); ?>"
+                            class="message-feature-image"
+                            loading="lazy">
+                    </div>
+
+                    <div class="message-content">
+                        <h3 class="message-title"><?php echo esc_html($display_title); ?></h3>
+
+                        <?php if ($author) : ?>
+                            <p class="message-author">作者：<?php echo esc_html($author); ?></p>
+                        <?php endif; ?>
+                    </div>
                 </div>
-
-                <div class="message-content">
-                    <h3 class="message-title"><?php echo esc_html($display_title); ?></h3>
-
-                    <?php if ($author) : ?>
-                        <p class="message-author">作者：<?php echo esc_html($author); ?></p>
-                    <?php endif; ?>
-
-                    <?php if ($order) : ?>
-                        <span class="message-order">序号：<?php echo esc_html($order); ?></span>
-                    <?php endif; ?>
-                </div>
-            </div>
+            </a>
         </div>
 <?php
     }
