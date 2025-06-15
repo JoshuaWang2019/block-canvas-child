@@ -90,6 +90,22 @@ class Assets
                 'all'
             );
         }
+
+        // 加载 Messages List 页面样式
+        if (is_page_template('templates/messages-list.html')) {
+            wp_enqueue_style(
+                'messages-style',
+                get_stylesheet_directory_uri() . '/assets/css/messages-list.css',
+                array('block-canvas-child-style'),
+                $theme->get('Version')
+            );
+        }
+        // wp_enqueue_style(
+        //     'messages-style',
+        //     get_stylesheet_directory_uri() . '/assets/css/messages-list.css',
+        //     array('block-canvas-child-style'),
+        //     $theme->get('Version')
+        // );
     }
 
     /**

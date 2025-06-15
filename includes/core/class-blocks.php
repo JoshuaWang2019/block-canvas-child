@@ -63,5 +63,9 @@ class Blocks
         // 注册 Message 内容区块
         require_once get_stylesheet_directory() . '/includes/blocks/class-message-content.php';
         new \BlockCanvasChild\Blocks\Message_Content();
+
+        // 注册 Messages 列表区块
+        require_once get_stylesheet_directory() . '/includes/blocks/class-messages-grid.php';
+        new \BlockCanvasChild\Blocks\Messages_Grid();
     }
 }

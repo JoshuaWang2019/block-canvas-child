@@ -7,18 +7,26 @@ Block Canvas 子主题，用于甘泉网站的自定义功能开发。
 ```
 block-canvas-child/
 ├── assets/                  # 静态资源文件
+│   ├── images/                    # 新增图片目录
+│   │   └── default_message_feature.png  # 默认封面图片
 │   ├── css/                # CSS 样式文件
 │   │   └── ebooks.css      # 电子书列表页面样式
+│   │   ├── message.css
+│   │   └── messages-list.css
 │   └── js/                 # JavaScript 文件
 │       └── ebooks-search.js # 电子书搜索功能
 ├── includes/               # PHP 类和函数文件
 │   ├── blocks/            # 自定义区块类
 │   │   └── class-ebooks-grid.php  # 电子书网格区块
+│   │   ├── class-message-content.php
+│   │   └── class-messages-list.php
 │   ├── core/             # 核心功能类
 │   │   └── class-assets.php       # 资源管理类
 │   └── init.php          # 初始化文件
 ├── templates/            # 页面模板
 │   └── ebooks-list.html  # 电子书列表页面模板
+    ├── single-message.html
+    └── page-messages_list.html
 ├── functions.php        # 主题函数文件
 ├── style.css           # 主题样式文件
 └── README.md           # 本文档
